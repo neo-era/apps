@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bộ công cụ chiếu sáng</title>
+<meta name="description" content="Cổng tổng hợp các ứng dụng web chiếu sáng — mô phỏng, khảo sát, hồ sơ, duy tu.">
+<meta name="theme-color" content="#0b1324">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CS Tools">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg0:#070c16; --bg1:#0c1324; --card:rgba(255,255,255,.045); --card-bd:rgba(255,255,255,.09);
+  --tx:#eaf0fb; --tx2:#9fb0cc; --tx3:#6b7d9c;
+  --cyan:#36d6e7; --amber:#ffc24b; --accent:#4f8cff;
+  --radius:16px; --shadow:0 18px 48px -18px rgba(0,0,0,.7);
+  --chip:rgba(255,255,255,.06); --chip-on:rgba(54,214,231,.16); --chip-on-bd:rgba(54,214,231,.5);
+}
+:root[data-theme="light"]{
+  --bg0:#eef2f8; --bg1:#e5ebf4; --card:#ffffff; --card-bd:rgba(20,30,60,.1);
+  --tx:#0e1726; --tx2:#43526b; --tx3:#7e8ba3; --shadow:0 18px 40px -22px rgba(30,50,90,.4);
+  --cyan:#0a8fa3; --accent:#2a6bd6;
+  --chip:rgba(20,40,80,.05); --chip-on:rgba(10,143,163,.12); --chip-on-bd:rgba(10,143,163,.45);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Be Vietnam Pro",system-ui,-apple-system,sans-serif;color:var(--tx);min-height:100vh;
+  background:
+    radial-gradient(900px 500px at 12% -5%, rgba(79,140,255,.18), transparent 60%),
+    radial-gradient(800px 460px at 95% 0%, rgba(54,214,231,.14), transparent 55%),
+    linear-gradient(180deg,var(--bg0),var(--bg1)) fixed;}
+:root[data-theme="light"] body{background:
+    radial-gradient(900px 500px at 12% -5%, rgba(79,140,255,.10), transparent 60%),
+    radial-gradient(800px 460px at 95% 0%, rgba(10,143,163,.08), transparent 55%),
+    linear-gradient(180deg,var(--bg0),var(--bg1)) fixed;}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;
+  padding:calc(24px + env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) calc(56px + env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));}
+
+/* ---- Thanh báo bản mới ---- */
+.updbar{display:none;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;
+  background:linear-gradient(90deg,var(--cyan),var(--accent));color:#06121f;
+  padding:10px 14px;border-radius:12px;margin-bottom:16px;font-size:14px;font-weight:500}
+.updbar.show{display:flex}
+.updbar button{background:#06121f;color:#eafcff;border:none;border-radius:9px;padding:7px 14px;
+  font:inherit;font-weight:600;cursor:pointer;min-height:38px}
+
+/* ---- Header ---- */
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:13px;min-width:0}
+.logo{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--cyan),var(--accent));box-shadow:0 8px 24px -6px rgba(54,214,231,.5)}
+.logo svg{width:28px;height:28px;stroke:#071018;fill:none;stroke-width:1.9}
+.brand h1{font-size:21px;font-weight:700;margin:0;letter-spacing:.2px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.ver{font-size:11.5px;font-weight:600;color:var(--cyan);background:var(--chip-on);
+  border:1px solid var(--chip-on-bd);padding:2px 8px;border-radius:999px}
+.brand p{margin:3px 0 0;color:var(--tx2);font-size:13px}
+.spacer{flex:1}
+.tools{display:flex;gap:10px;align-items:center}
+.icbtn{min-width:42px;height:42px;padding:0 12px;border-radius:12px;background:var(--card);border:1px solid var(--card-bd);
+  color:var(--tx2);display:inline-flex;align-items:center;gap:7px;cursor:pointer;backdrop-filter:blur(8px);
+  font:inherit;font-size:13.5px;font-weight:500;transition:border-color .15s,color .15s}
+.icbtn:hover{border-color:var(--chip-on-bd);color:var(--tx)}
+.icbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;flex:0 0 auto}
+.icbtn.sq{padding:0;width:42px;justify-content:center}
+#installBtn{display:none}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:10px}
+
+/* ---- Tìm kiếm + lọc ---- */
+.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:22px 0 14px}
+.search{flex:1;min-width:220px;display:flex;align-items:center;gap:9px;background:var(--card);
+  border:1px solid var(--card-bd);border-radius:13px;padding:11px 14px;backdrop-filter:blur(8px)}
+.search:focus-within{border-color:var(--chip-on-bd)}
+.search input{background:none;border:none;color:var(--tx);outline:none;font:inherit;font-size:15px;width:100%}
+.search input::placeholder{color:var(--tx3)}
+.search svg{width:18px;height:18px;stroke:var(--tx3);fill:none;stroke-width:2;flex:0 0 auto}
+.clear{background:none;border:none;color:var(--tx3);cursor:pointer;display:none;padding:2px}
+.clear.show{display:inline-flex}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.chip{font:inherit;font-size:13px;color:var(--tx2);background:var(--chip);border:1px solid var(--card-bd);
+  padding:7px 14px;border-radius:999px;cursor:pointer;min-height:36px;transition:all .15s}
+.chip:hover{color:var(--tx)}
+.chip[aria-pressed="true"]{color:var(--cyan);background:var(--chip-on);border-color:var(--chip-on-bd);font-weight:500}
+
+/* ---- Lưới thẻ ---- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{position:relative;background:var(--card);border:1px solid var(--card-bd);border-radius:var(--radius);
+  padding:20px 18px;text-decoration:none;color:inherit;backdrop-filter:blur(10px);overflow:hidden;display:block;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.card:hover,.card:focus-visible{transform:translateY(-4px);border-color:var(--chip-on-bd);box-shadow:var(--shadow)}
+.card::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;
+  background:linear-gradient(180deg,var(--cyan),var(--accent));opacity:0;transition:opacity .18s}
+.card:hover::before,.card:focus-visible::before{opacity:1}
+.ci{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;margin-bottom:14px;
+  background:linear-gradient(135deg,rgba(54,214,231,.22),rgba(79,140,255,.18));border:1px solid var(--card-bd)}
+.ci svg{width:24px;height:24px;stroke:var(--cyan);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.card h3{margin:0 0 6px;font-size:16px;font-weight:600}
+.card .d{margin:0;color:var(--tx2);font-size:13px;line-height:1.55;min-height:40px}
+.row{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.tag{font-size:11.5px;color:var(--cyan);background:var(--chip-on);border:1px solid var(--chip-on-bd);
+  padding:3px 9px;border-radius:999px}
+.open{display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--tx3)}
+.open svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* ---- Rỗng ---- */
+.empty{display:none;text-align:center;color:var(--tx2);padding:48px 16px}
+.empty.show{display:block}
+.empty svg{width:40px;height:40px;stroke:var(--tx3);fill:none;stroke-width:1.6;margin-bottom:10px}
+
+footer{margin-top:34px;color:var(--tx3);font-size:12.5px;text-align:center;line-height:1.7}
+
+@media (max-width:600px){
+  .brand h1{font-size:19px}
+  .grid{grid-template-columns:1fr}
+  .tools .lbl{display:none}
+  .icbtn{padding:0;width:42px;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="updbar" id="updbar" role="status">
+    <span>Đã có bản mới của trang.</span>
+    <button id="reloadBtn" type="button">Tải lại</button>
+  </div>
+
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.4 1 2.5h6c0-1.1.4-1.9 1-2.5A6 6 0 0 0 12 3Z"/></svg></div>
+      <div>
+        <h1>Bộ công cụ chiếu sáng <span class="ver" id="ver">v?</span></h1>
+        <p>neo-era · chạy trên trình duyệt · dữ liệu tại máy</p>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="tools">
+      <button class="icbtn" id="installBtn" type="button"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg><span class="lbl">Cài đặt</span></button>
+      <button class="icbtn sq" id="themeBtn" type="button" aria-label="Đổi nền sáng/tối"><svg id="themeIco" viewBox="0 0 24 24"><path d="M21 12.8A8 8 0 1 1 11.2 3 6.3 6.3 0 0 0 21 12.8Z"/></svg></button>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
+      <input id="q" type="search" placeholder="Tìm ứng dụng…" aria-label="Tìm ứng dụng" autocomplete="off">
+      <button class="clear" id="clearBtn" type="button" aria-label="Xoá tìm kiếm"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+  </div>
+  <div class="chips" id="chips" role="group" aria-label="Lọc theo nhóm"></div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="empty" id="empty">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
+    <p>Không tìm thấy ứng dụng phù hợp.</p>
+  </div>
+
+  <footer>
+    <div>Cổng tổng hợp ứng dụng · <span id="count"></span> ứng dụng · <span id="verF"></span></div>
+    <div id="iosHint" style="display:none;margin-top:6px">Cài trên iPhone/iPad: bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.</div>
+  </footer>
+</div>
+
+<script src="version.js"></script>
+<script src="apps.js"></script>
+<script>
+(function(){
+  var V = self.APP_VERSION || "?";
+  document.getElementById('ver').textContent = 'v' + V;
+  document.getElementById('verF').textContent = 'phiên bản ' + V;
+
+  var APPS = window.HUB_APPS || [], IC = window.HUB_ICONS || {};
+  document.getElementById('count').textContent = APPS.length;
+
+  // ----- Nhóm -----
+  var groups = []; APPS.forEach(function(a){ if(groups.indexOf(a.group)<0) groups.push(a.group); });
+  var activeGroup = 'all', query = '';
+  var chips = document.getElementById('chips');
+  function mkChip(label,val){
+    var b=document.createElement('button'); b.className='chip'; b.type='button'; b.textContent=label;
+    b.setAttribute('aria-pressed', val===activeGroup ? 'true':'false');
+    b.onclick=function(){ activeGroup=val; [].forEach.call(chips.children,function(c){c.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true'); render(); };
+    chips.appendChild(b);
+  }
+  mkChip('Tất cả','all'); groups.forEach(function(g){ mkChip(g,g); });
+
+  // ----- Tìm kiếm -----
+  function norm(s){ return (s||'').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d'); }
+  var grid=document.getElementById('grid'), empty=document.getElementById('empty');
+  var qEl=document.getElementById('q'), clearBtn=document.getElementById('clearBtn');
+
+  function cardHTML(a){
+    var path = IC[a.icon] || IC.bulb || '';
+    return '<a class="card" href="'+a.url+'" target="_blank" rel="noopener">'
+      + '<div class="ci" aria-hidden="true"><svg viewBox="0 0 24 24">'+path+'</svg></div>'
+      + '<h3>'+a.name+'</h3><p class="d">'+a.desc+'</p>'
+      + '<div class="row"><span class="tag">'+a.group+'</span>'
+      + '<span class="open">Mở <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div></a>';
+  }
+  function render(){
+    var nq=norm(query);
+    var list=APPS.filter(function(a){
+      if(activeGroup!=='all' && a.group!==activeGroup) return false;
+      if(!nq) return true;
+      return norm(a.name).indexOf(nq)>=0 || norm(a.desc).indexOf(nq)>=0 || norm(a.group).indexOf(nq)>=0;
+    });
+    grid.innerHTML=list.map(cardHTML).join('');
+    empty.classList.toggle('show', list.length===0);
+    grid.style.display = list.length===0 ? 'none':'grid';
+  }
+  qEl.addEventListener('input',function(){ query=qEl.value; clearBtn.classList.toggle('show',!!query); render(); });
+  clearBtn.onclick=function(){ qEl.value=''; query=''; clearBtn.classList.remove('show'); qEl.focus(); render(); };
+  render();
+
+  // ----- Đổi nền sáng/tối (lưu lựa chọn) -----
+  var root=document.documentElement, SUN='<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+  var MOON='<path d="M21 12.8A8 8 0 1 1 11.2 3 6.3 6.3 0 0 0 21 12.8Z"/>';
+  function applyTheme(t){ root.dataset.theme=t;
+    document.getElementById('themeIco').innerHTML = t==='dark'?MOON:SUN;
+    var m=document.querySelector('meta[name=theme-color]'); if(m) m.content = t==='dark'?'#0b1324':'#e5ebf4';
+  }
+  var saved=null; try{ saved=localStorage.getItem('cs-theme'); }catch(e){}
+  applyTheme(saved || 'dark');
+  document.getElementById('themeBtn').onclick=function(){
+    var t=root.dataset.theme==='dark'?'light':'dark'; applyTheme(t);
+    try{ localStorage.setItem('cs-theme',t); }catch(e){}
+  };
+
+  // ----- PWA: cài đặt + báo bản mới -----
+  var deferred=null, installBtn=document.getElementById('installBtn');
+  window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); deferred=e; installBtn.style.display='inline-flex'; });
+  installBtn.onclick=function(){ if(!deferred) return; deferred.prompt(); deferred.userChoice.finally(function(){ deferred=null; installBtn.style.display='none'; }); };
+  window.addEventListener('appinstalled',function(){ installBtn.style.display='none'; });
+
+  // Gợi ý cài trên iOS (Safari không có beforeinstallprompt)
+  var isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if(isiOS && !standalone) document.getElementById('iosHint').style.display='block';
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('sw.js').then(function(reg){
+        function watch(w){ if(!w) return; w.addEventListener('statechange',function(){
+          if(w.state==='installed' && navigator.serviceWorker.controller){
+            var bar=document.getElementById('updbar'); bar.classList.add('show');
+            document.getElementById('reloadBtn').onclick=function(){ w.postMessage('SKIP_WAITING'); };
+          }
+        }); }
+        if(reg.waiting && navigator.serviceWorker.controller){
+          var bar=document.getElementById('updbar'); bar.classList.add('show');
+          document.getElementById('reloadBtn').onclick=function(){ reg.waiting.postMessage('SKIP_WAITING'); };
+        }
+        reg.addEventListener('updatefound',function(){ watch(reg.installing); });
+      }).catch(function(){});
+      var reloaded=false;
+      navigator.serviceWorker.addEventListener('controllerchange',function(){ if(reloaded) return; reloaded=true; location.reload(); });
+    });
+  }
+})();
+</script>
+</body>
+</html>
