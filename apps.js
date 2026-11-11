@@ -11,6 +11,7 @@ window.HUB_APPS = [
   { name: "Khảo sát CS SAPULICO",  desc: "Quản lý khảo sát hiện trường, hồ sơ, biên bản (SAPULICO)",  group: "Khảo sát",    icon: "clip",      url: "https://neo-era.github.io/khaosat/index.html" },
   { name: "Đèn Tắt CSCC",          desc: "Quản lý & báo cáo đèn công cộng hỏng/tắt, xuất Excel/DXF",   group: "Sự cố",       icon: "alert",     url: "https://neo-era.github.io/dentat/dentat.html" },
   { name: "Hoàn công CSKVTT",      desc: "Lập hồ sơ hoàn công các gói duy tu chiếu sáng",              group: "Hồ sơ",       icon: "filecheck", url: "https://neo-era.github.io/cskvtt/hoancong/" },
+  { name: "Quản lý HĐ Duy tu",     desc: "Quản lý hợp đồng duy tu chiếu sáng Khu vực Trung Tâm",       group: "Hợp đồng",    icon: "contract",  url: "https://neo-era.github.io/quanly-hopdong-duytu/index.html" },
   { name: "Nhật ký thi công",      desc: "Nhật ký thi công hàng ngày, xuất PDF/Word",                 group: "Hiện trường", icon: "book",      url: "https://neo-era.github.io/diary/" },
   { name: "Biên bản họp",          desc: "Ghi biên bản cuộc họp bằng giọng nói, xuất file Word",       group: "Văn phòng",   icon: "mic",       url: "https://neo-era.github.io/bien-ban-hop/" },
   { name: "Chấm công CSCC",        desc: "Hệ thống chấm công cho đơn vị chiếu sáng công cộng",         group: "Nhân sự",     icon: "clock",     url: "https://neo-era.github.io/chamcong/web/index.html" },
@@ -27,4 +28,5 @@ window.HUB_ICONS = {
   clip:      '<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4a3 3 0 0 1 6 0M9 11h6M9 15h4"/>',
   ruler:     '<path d="M3 15 15 3l6 6L9 21Z"/><path d="m7 11 2 2M11 7l2 2M15 11l2 2"/>',
   clock:     '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  contract:  '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M8 13h5M8 17h3"/><path d="m14.5 17.5 1.5 1.5 3-3"/>',
 };
