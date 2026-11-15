@@ -16,6 +16,7 @@ window.HUB_APPS = [
   { name: "Biên bản họp",          desc: "Ghi biên bản cuộc họp bằng giọng nói, xuất file Word",       group: "Văn phòng",   icon: "mic",       url: "https://neo-era.github.io/bien-ban-hop/" },
   { name: "Chấm công CSCC",        desc: "Hệ thống chấm công cho đơn vị chiếu sáng công cộng",         group: "Nhân sự",     icon: "clock",     url: "https://neo-era.github.io/chamcong/web/index.html" },
   { name: "QLHH — Quản lý hàng hóa", desc: "Quản lý hàng hóa, kho vật tư (LAVIPCO / Đại Châu)",        group: "Kho vật tư",  icon: "box",       url: "https://neo-era.github.io/qlhh/" },
+  { name: "Điều khiển LOGO! PLC",  desc: "Giám sát & điều khiển tủ PLC LOGO! 230RCE qua web; kèm HD chỉnh giờ", group: "Điều khiển", icon: "cpu",       url: "https://neo-era.github.io/plc-logo/" },
 ];
 
 /* Icon dạng SVG path (stroke). Thêm icon mới: thêm 1 khoá ở đây rồi dùng trong HUB_APPS. */
@@ -31,4 +32,5 @@ window.HUB_ICONS = {
   clock:     '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   contract:  '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M8 13h5M8 17h3"/><path d="m14.5 17.5 1.5 1.5 3-3"/>',
   box:       '<path d="M21 8 12 3 3 8v8l9 5 9-5Z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
+  cpu:       '<rect x="7" y="7" width="10" height="10" rx="1.5"/><rect x="10" y="10" width="4" height="4"/><path d="M10 2v3M14 2v3M10 19v3M14 19v3M2 10h3M2 14h3M19 10h3M19 14h3"/>',
 };
